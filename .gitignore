@@ -1,0 +1,30 @@
+# Ambientes virtuais
+.venv/
+lab00/
+venv/
+env/
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Banco de dados ADK
+**/.adk/
+*.db
+
+# Variáveis de ambiente
+.env
+.env.*
+!.env.example
+
+# Claude Code
+.claude/
+
+# IDEs
+.vscode/
+.idea/
+
+# Windows
+Thumbs.db
+desktop.ini
