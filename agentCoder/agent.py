@@ -14,11 +14,20 @@ search_agent = Agent(
 tools=[google_search],
 )
 
+coding_agent = Agent(
+    model='gemini-2.5-flash',
+    name='coding_agent',
+    description='Voce é um agente especializado em escrever e executar código.',
+    instruction="""
+                Voce é um agente especializado em escrever e executar código.
+                Use a ferramenta de execução de código para executat o código que voce escreveu.""",
+    code_executor=BuiltInCodeExecutor(),
+)
 root_agent = Agent(
     model='gemini-2.5-flash',
     name='root_agent',
     description='Voce é o agente principal e orquestrador.',
     instruction="Voce é o agente principal e orquestrador.",
-    tools=[AgentTool(agent=search_agent)],
+    tools=[AgentTool(agent=search_agent), AgentTool(agent=coding_agent)]
 
 )
