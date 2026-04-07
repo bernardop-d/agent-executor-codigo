@@ -1,102 +1,74 @@
-—çãíáôêú—çõó—éçãçãáõúúáõçãçãçãííçãíéçãçãóãó—óõçó├──→├──→ó├──→ê└──→áçãçãó—çãáúçãíáóê├──ãó│├──│└──├──ã│├──│├──çã│└──í├──│└──└──# Agent Executor — Automação com Agentes de IA
+# Agent Executor — Sistema Multi-Agente com Google ADK
 
-Projeto desenvolvido para estudar e praticar o uso do **Google ADK (Agent Development Kit)** com o modelo **Gemini 2.5 Flash**. A ideia é criar agentes de IA que conseguem fazer tarefas do dia a dia de forma automática, como pesquisar na web, escrever e rodar código Python, ler e criar arquivos, e executar comandos no terminal.
-
----
-
-## Tecnologias usadas
-
-- Python 3.11+
-- Google ADK
-- Gemini 2.5 Flash
-- Pytest
+Sistema de orquestração de agentes de IA com **Google ADK** e **Gemini 2.5 Flash**. O usuário descreve um problema em linguagem natural e o sistema decide, de forma autônoma, quais agentes especialistas acionar e em que sequência.
 
 ---
 
-## O que o projeto faz
+## O Problema
 
-O projeto tem dois módulos principais:
+Automatizar tarefas que exigem múltiplas capacidades — pesquisar na web, escrever código, executar scripts, manipular arquivos — normalmente requer pipelines fixos e hardcoded. A proposta deste projeto é criar um sistema que **decide o fluxo em tempo de execução**, com base na intenção do usuário.
 
-**agentCoder** — versão inicial com dois agentes:
-- Um agente que pesquisa na web usando o Google Search
-- Um agente que escreve e executa código Python
+## Decisões de Arquitetura
 
-**workflowAgent** — versão mais completa com quatro agentes:
-- **search_agent**: pesquisa informações na web
-- **coding_agent**: escreve e roda código Python
-- **file_agent**: lê, cria e lista arquivos no computador
-- **shell_agent**: roda comandos no terminal (como `pip install`, `ls`, etc.)
+### Por que Multi-Agente em vez de um único agente?
 
-Todos os agentes são coordenados por um **root_agent**, que decide qual agente chamar dependendo da tarefa pedida.
+Um único agente com todas as ferramentas acumula contexto desnecessário e toma decisões mais lentas. A separação por especialidade permite que cada agente seja otimizado para sua tarefa e que o agente raiz foque exclusivamente em orquestração e delegação.
 
----
+### O Ciclo de Raciocínio (ReAct Loop)
 
-## Como rodar o projeto
+O root_agent opera em ciclo: recebe a tarefa, analisa a intenção, escolhe o agente especialista, recebe o resultado parcial e decide se precisa de outro agente. Esse loop continua até a resolução completa.
 
-### 1. Clone o repositório
+### Isolamento de Execução de Código
 
-```bash
-git clone https://github.com/bernardop-d/agent-executor-codigo.git
-cd agent-executor-codigo
-```
-
-### 2. Crie um ambiente virtual e instale as dependências
-
-```bash
-python -m venv .venv
-source .venv/bin/activate  # no Windows: .venv\Scripts\activate
-pip install google-adk pytest
-```
-
-### 3. Configure sua chave da API do Gemini
-
-```bash
-export GOOGLE_API_KEY="sua-chave-aqui"
-```
-
-> Você pode obter sua chave gratuita em: https://aistudio.google.com/
-
-### 4. Execute o agente
-
-```bash
-adk run workflowAgent
-```
+O coding_agent não apenas gera código — ele executa o código Python gerado. O código roda em subprocess controlado, com captura de stdout/stderr para feedback ao orquestrador.
 
 ---
 
-## Como rodar os testes
+## Arquitetura dos Agentes
 
-```bash
-pytest tests/ -v
-```
+root_agent (orquestrador)
+├── search_agent: pesquisa na web via Google Search
+├── coding_agent: gera e executa código Python em subprocess isolado
+├── file_agent: lê, cria e lista arquivos locais
+└── shell_agent: executa comandos no terminal
 
 ---
 
-## Estrutura de pastas
+## Stack
 
-```
+Tecnologia | Papel
+Python 3.11+ | Linguagem principal
+Google ADK | Framework de orquestração de agentes
+Gemini 2.5 Flash | Modelo de linguagem para raciocínio dos agentes
+Pytest | Testes unitários das ferramentas
+
+---
+
+## Como Rodar
+
+1. Clone o repositório: git clone https://github.com/bernardop-d/agent-executor-codigo.git
+2. Crie um ambiente virtual: python -m venv .venv && source .venv/bin/activate
+3. Instale as dependências: pip install google-adk pytest
+4. Configure a chave: export GOOGLE_API_KEY="sua-chave-aqui" (obtenha em https://aistudio.google.com/)
+5. Execute o sistema: adk run workflowAgent
+6. Para rodar os testes: pytest tests/ -v
+
+---
+
+## Estrutura do Projeto
+
 agent-executor-codigo/
-├── agentCoder/
+├── agentCoder/        # Versão inicial: pesquisa + código
 │   ├── __init__.py
 │   └── agent.py
-├── workflowAgent/
+├── workflowAgent/     # Versão completa: 4 agentes + orquestrador
 │   ├── __init__.py
-│   ├── agent.py
-│   └── tools.py
+│   ├── agent.py       # Definição dos agentes e root_agent
+│   └── tools.py       # Ferramentas disponíveis para os agentes
 ├── tests/
 │   └── test_tools.py
 └── README.md
-```
 
 ---
 
-## O que aprendi com esse projeto
-
-- Como configurar e usar o Google ADK para criar agentes de IA
-- Como criar ferramentas (funções Python) que os agentes podem usar
-- Como organizar um projeto Python em módulos
-- Como escrever testes unitários com Pytest
-
----
-
-Feito por [Bernardo P. D.](https://github.com/bernardop-d)
+Feito por Bernardo P. D. — linkedin.com/in/bernardop-d/
