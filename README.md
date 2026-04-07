@@ -1,4 +1,4 @@
-# Agent Executor — Automação com Agentes de IA
+—çãíáôêú—çõó—éçãçãáõúúáõçãçãçãííçãíéçãçãóãó—óõçó├──→├──→ó├──→ê└──→áçãçãó—çãáúçãíáóê├──ãó│├──│└──├──ã│├──│├──çã│└──í├──│└──└──# Agent Executor — Automação com Agentes de IA
 
 Projeto desenvolvido para estudar e praticar o uso do **Google ADK (Agent Development Kit)** com o modelo **Gemini 2.5 Flash**. A ideia é criar agentes de IA que conseguem fazer tarefas do dia a dia de forma automática, como pesquisar na web, escrever e rodar código Python, ler e criar arquivos, e executar comandos no terminal.
 
